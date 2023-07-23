@@ -32,4 +32,5 @@ This app is built with streamlit web framework:
 # Limitation
 
 It currently supports AI assistants like Claude, Bard. 
-An session from ChatGPT cannot be saved into a HTML file locally (If you know how, please share.) 
+
+== An session from ChatGPT cannot be saved into a HTML file locally ==(If you know how, please share.) 
