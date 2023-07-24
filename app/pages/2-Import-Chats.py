@@ -1,12 +1,8 @@
 import streamlit as st
 import pandas as pd
-
 from io import StringIO 
 
-
 from helper import *
-
-
 
 st.subheader("Import Chats")
 
@@ -16,6 +12,8 @@ def import_chat():
     INPUT_FILENAME = ""
     html_txt = ""
     cells = []
+    CHAT_BOTS = CFG["CHAT_BOTS"]
+    SUPPORTED_CHAT_BOTS = CFG["SUPPORTED_CHAT_BOTS"]
 
     c0, c1 = st.columns([6,3])
     with c1:
@@ -64,11 +62,11 @@ def import_chat():
 
     if not chat_data: return
 
-    df_chat = pd.DataFrame(chat_data, columns=st.session_state["CHAT_COLUMNS"])
+    df_chat = pd.DataFrame(chat_data, columns=CFG["CHAT_COLUMNS"])
     if df_chat is None or not df_chat.shape[0]:
         return
 
-    if st.session_state["DEBUG_FLAG"]:
+    if CFG["DEBUG_FLAG"]:
         st.dataframe(df_chat)
 
     c1, c2, _, _ = st.columns([2,2,2,2])
@@ -89,7 +87,7 @@ def import_chat():
     if btn_save:
         # save chats to DB
         with DBConn() as _conn:
-            df_chat.to_sql(st.session_state["CHAT_TABLE"], _conn, if_exists='append', index=False)
+            df_chat.to_sql(CFG["CHAT_TABLE"], _conn, if_exists='append', index=False)
 
 
 import_chat()

@@ -18,7 +18,7 @@ def main():
         sql_stmt = f"""
             select 
                 session_title, seq_num, question, answer, ts, bot_name, bot_version
-            from {st.session_state["CHAT_TABLE"]}
+            from {CFG["CHAT_TABLE"]}
             order by ts desc, session_title, seq_num
         """
         df = pd.read_sql(sql_stmt, _conn)

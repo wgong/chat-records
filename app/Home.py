@@ -25,10 +25,7 @@ It is built on [Streamlit](https://streamlit.io/) web framework:
 """, unsafe_allow_html=True)
 
 # load config params into memory
-st.session_state["CHAT_TABLE"] = CFG["CHAT_TABLE"]
-st.session_state["CHAT_COLUMNS"] = CFG["CHAT_COLUMNS"]
-st.session_state["DB_FILENAME"] = CFG["DB_FILENAME"]
-st.session_state["DEBUG_FLAG"] = CFG["DEBUG_FLAG"]
+# st.session_state["CHAT_TABLE"] = CFG["CHAT_TABLE"]
 
 # detect table's existence, if no, create it
 with DBConn() as _conn:

@@ -4,20 +4,18 @@ from pathlib import Path
 from bs4 import BeautifulSoup
 from lxml import html
 from datetime import datetime
-from st_aggrid import (GridOptionsBuilder, JsCode,
-                       AgGrid, GridUpdateMode, DataReturnMode)
+from st_aggrid import (AgGrid, GridOptionsBuilder, GridUpdateMode, 
+                       JsCode, DataReturnMode)
 
 CFG = {
+    "DEBUG_FLAG" : False, # True,
     "CHAT_TABLE" : "t_chats",
     "CHAT_COLUMNS" : ["session_title", "bot_name", "bot_version", "ts", "seq_num", "question", "answer"],
     "DB_FILENAME" : Path(__file__).parent / "chats.sqlite",
-    "DEBUG_FLAG" : True,
+    "CHAT_BOTS" : ["Claude __ v2", "Bard __ beta"],
+    "SUPPORTED_CHAT_BOTS" : ["Claude __ v2"],
+    "NOISE_WORDS" : ['Copy code','Copy'],
 }
-
-
-CHAT_BOTS = ["Claude __ v2", "Bard __ beta"]
-SUPPORTED_CHAT_BOTS = ["Claude __ v2"]
-NOISE_WORDS = ['Copy code','Copy']
 
 # Aggrid options
 # how to set column width
@@ -117,11 +115,10 @@ def convert_htm2txt(html_txt):
     return html.fromstring(html_txt).text_content().strip()
 
 def is_noise_word(html_txt):
-    return convert_htm2txt(html_txt) in NOISE_WORDS
+    return convert_htm2txt(html_txt) in CFG["NOISE_WORDS"]
 
 def parse_bot_ver(bot_ver, sep="__"):
     return [x.strip() for x in bot_ver.split(sep) if x.strip()]
-
 
 def parse_html_txt_claude(html_txt):
     """
