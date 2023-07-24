@@ -1,11 +1,9 @@
 """
-An example multi-page streamlit app 
-from https://towardsdatascience.com/3-ways-to-create-a-multi-page-streamlit-app-1825b5b07c0f
+
 """
 
 import streamlit as st
 import pandas as pd
-from config import CFG
 from helper import *
 
 st.set_page_config(

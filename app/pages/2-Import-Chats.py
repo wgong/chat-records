@@ -1,58 +1,18 @@
 import streamlit as st
 import pandas as pd
-# import plotly.express as px
+
 from io import StringIO 
-from bs4 import BeautifulSoup
-from lxml import html
-from datetime import datetime
+
 
 from helper import *
 
 
 
-
-CHAT_BOTS = ["Claude __ v2", "Bard __ beta"]
-SUPPORTED_CHAT_BOTS = ["Claude __ v2"]
-NOISE_WORDS = ['Copy code','Copy']
-
-df_chat = None
-
 st.subheader("Import Chats")
-
-def convert_df2csv(df, index=True):
-    return df.to_csv(index=index).encode('utf-8')
-
-def convert_htm2txt(html_txt):
-    return html.fromstring(html_txt).text_content().strip()
-
-def is_noise_word(html_txt):
-    return convert_htm2txt(html_txt) in NOISE_WORDS
-
-def _parse_bot_ver(bot_ver, sep="__"):
-    return [x.strip() for x in bot_ver.split(sep) if x.strip()]
-
-def parse_html_txt_claude(html_txt):
-    """
-    Extract question/answer from HTML text
-
-    Returns:
-        list of dialog content
-    """
-    cells = []
-    if not html_txt: return cells
-
-    soup = BeautifulSoup(html_txt, "html.parser")
-    results = soup.findAll("div", class_="contents")
-    for i in range(len(results)):
-        v = results[i].prettify()
-        if is_noise_word(v): continue
-        # important to preserve HTML string because python code snippets are formatted
-        cells.append(v)
-    return cells
 
 def import_chat():
 
-
+    df_chat = None
     INPUT_FILENAME = ""
     html_txt = ""
     cells = []
@@ -66,7 +26,7 @@ def import_chat():
             st.error(f"{bot} is unsupported yet")
             return
 
-        bot_name, bot_version = _parse_bot_ver(bot)
+        bot_name, bot_version = parse_bot_ver(bot)
 
         txt_file = st.file_uploader("", key="upload_txt")
 
