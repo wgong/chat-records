@@ -1,7 +1,6 @@
 import streamlit as st
 import pandas as pd
 from io import StringIO 
-
 from helper import *
 
 st.subheader("Import Chats")
@@ -18,13 +17,11 @@ def import_chat():
     c0, c1 = st.columns([6,3])
     with c1:
         st.markdown("""##### <span style="color:green">Upload a saved chat HTML file</span>""", unsafe_allow_html=True)
-        bot = st.selectbox("Select AI Assistant Name", CHAT_BOTS, index=CHAT_BOTS.index("Claude __ v2"))
+        bot_name = st.selectbox("Select AI Assistant Name", CHAT_BOTS, index=CHAT_BOTS.index("Claude - v2"))
 
-        if bot not in SUPPORTED_CHAT_BOTS:
-            st.error(f"{bot} is unsupported yet")
+        if bot_name not in SUPPORTED_CHAT_BOTS:
+            st.error(f"{bot_name} is unsupported yet")
             return
-
-        bot_name, bot_version = parse_bot_ver(bot)
 
         txt_file = st.file_uploader("", key="upload_txt")
 
@@ -33,7 +30,7 @@ def import_chat():
             # To convert to a string based IO:
             html_txt = StringIO(txt_file.getvalue().decode("utf-8")).read()
 
-        if bot_name == "Claude" and html_txt:
+        if bot_name == CFG["SUPPORTED_CHAT_BOTS"][0] and html_txt:
             cells = parse_html_txt_claude(html_txt)
                 
     if not cells or not INPUT_FILENAME:
@@ -45,18 +42,21 @@ def import_chat():
 - {int(len(cells)/2)} questions are asked in this session
             """, unsafe_allow_html=True)
 
-    ts = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    ts = get_ts_now()
     chat_data = []
     seq_num = 1
+    topic = tags = ""
+    uid = get_uid()
     cell_length = len(cells)
     for i in range(0, len(cells), 2):
+        id = get_uuid()
         question = cells[i] if i < cell_length else ""
         answer = cells[i+1] if (i+1) < cell_length else ""
         st.markdown(f"""##### <span style="color:red">Q [{seq_num}] :</span>""", unsafe_allow_html=True)
         st.markdown(question, unsafe_allow_html=True)
         st.markdown(f"""##### <span style="color:blue">A [{seq_num}] :</span>""", unsafe_allow_html=True)
         st.markdown(answer, unsafe_allow_html=True)
-        chat_data.append([session_title, bot_name, bot_version, ts, seq_num, question, answer])
+        chat_data.append([id, session_title, bot_name, ts, seq_num, question, answer, topic, tags, uid])
         seq_num += 1
 
 

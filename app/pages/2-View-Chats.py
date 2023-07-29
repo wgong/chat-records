@@ -7,25 +7,24 @@ Note:
 
 import streamlit as st
 import pandas as pd
-
 from helper import *
 
-st.subheader("Manage Chats")
+st.subheader("View Chats")
 
 def main():
     df = None
     with DBConn() as _conn:
         sql_stmt = f"""
             select 
-                session_title, seq_num, question, answer, ts, bot_name, bot_version
+                session_title, seq_num, question, answer, topic, tags, bot_name, ts, uid, id
             from {CFG["CHAT_TABLE"]}
             order by ts desc, session_title, seq_num
         """
         df = pd.read_sql(sql_stmt, _conn)
 
-    if df is None:
+    if df is None or not df.shape[0]:
         return
-    
+
     grid_response = display_df_grid(df, selection_mode="multiple")
 
     for row in grid_response['selected_rows']:
@@ -34,6 +33,7 @@ def main():
         st.markdown(question, unsafe_allow_html=True)
         st.markdown(f"""##### <span style="color:blue">{bot_name} [{seq_num}] :</span>""", unsafe_allow_html=True)
         st.markdown(answer, unsafe_allow_html=True)
+
 
 
 main()

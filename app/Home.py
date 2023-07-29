@@ -38,14 +38,17 @@ with DBConn() as _conn:
         create_table_sql = f"""
             create table if not exists {CFG["CHAT_TABLE"]} 
             (
+                id text NOT NULL,
                 session_title text NOT NULL,
                 bot_name text NOT NULL,
-                bot_version text,
                 ts text,
                 seq_num text,
                 question text,
-                answer text                
+                answer text,
+                topic text,
+                tags text,
+                uid text
             );
         """
-        run_sql(create_table_sql, _conn)
+        db_run_sql(create_table_sql, _conn)
 
