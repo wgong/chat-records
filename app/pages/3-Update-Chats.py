@@ -131,12 +131,21 @@ def ui_layout_form(selected_row, table_name="t_chats"):
 
 
 def main():
+    search_term = st.text_input("Search keyword:", key="search_update").strip()
+    if search_term:
+        where_clause = f"""
+            (session_title||question||answer||topic||tags) like '%{search_term}%'
+        """
+    else:
+        where_clause = " 1=1 "
+
     df = None
     with DBConn() as _conn:
         sql_stmt = f"""
             select 
                 session_title, seq_num, question, answer, topic, tags, ts, bot_name, uid, id
             from {CFG["CHAT_TABLE"]}
+            where {where_clause}
             order by ts desc, session_title, seq_num
         """
         df = pd.read_sql(sql_stmt, _conn)
