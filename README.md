@@ -21,13 +21,21 @@ $ pip install -r requirements.txt
 $ streamlit run app/Home.py
 ```
 
-# Architecture
+# Functionality
 
 This app is built with streamlit web framework: 
 - import chat-records from a saved HTML file;
 - use beautifulsoup to parse the file;
 - store question-and-answers in an SQLite database; 
 - search and manage chat history using data-editor.
+
+## Screenshots
+
+- [Welcome-to-Chat-Records](https://github.com/wgong/chat-records/blob/main/docs/screenshots/1-Chat-Records.png)
+- [Import-HTML-file](https://github.com/wgong/chat-records/blob/main/docs/screenshots/2-Import-HTML-file.png)
+- [Save-Chat-Records-to-DB](https://github.com/wgong/chat-records/blob/main/docs/screenshots/2-Save-to-DB.png)
+- [View-Chat-search](https://github.com/wgong/chat-records/blob/main/docs/screenshots/3-View-Chat-search-by-keyword.png)
+- [Update-chat-record](https://github.com/wgong/chat-records/blob/main/docs/screenshots/4-Update-chat-record.png)
 
 # Limitation
 

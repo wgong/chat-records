@@ -22,6 +22,8 @@ It is built on [Streamlit](https://streamlit.io/) web framework:
 - use beautifulsoup to parse the file;
 - store question-and-answers in an SQLite database; 
 - search and manage chat history using data-editor;
+
+[Source at GitHub](https://github.com/wgong/chat-records)
 """, unsafe_allow_html=True)
 
 # load config params into memory
