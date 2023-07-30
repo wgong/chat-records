@@ -6,6 +6,7 @@ from lxml import html
 from datetime import datetime
 from uuid import uuid4
 import os
+from io import StringIO 
 from st_aggrid import (AgGrid, GridOptionsBuilder, GridUpdateMode, 
                        JsCode, DataReturnMode)
 

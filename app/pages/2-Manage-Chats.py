@@ -9,7 +9,7 @@ import streamlit as st
 import pandas as pd
 from helper import *
 
-st.subheader("View Chats")
+st.subheader("Manage Chats")
 
 def main():
     search_term = st.text_input("Search keyword:", key="search_view").strip()
@@ -35,6 +35,15 @@ def main():
         return
 
     grid_response = display_df_grid(df, selection_mode="multiple")
+
+    ts = get_ts_now()
+    st.download_button(
+        label="Export DB to CSV",
+        data=convert_df2csv(df, index=False),
+        file_name=f"exported-chat-records-{ts}.csv",
+        mime='text/csv',
+        key="export_db2csv"
+    )
 
     for row in grid_response['selected_rows']:
         seq_num, question, answer, bot_name = row["seq_num"], row["question"], row["answer"], row["bot_name"]
