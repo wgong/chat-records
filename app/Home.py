@@ -18,10 +18,10 @@ st.markdown("""
 An app to import/export, manage chat records from dialog with AI assistants like [Claude](https://claude.ai/chats), [Bard](https://bard.google.com/).
             
 It is built on [Streamlit](https://streamlit.io/) web framework ([Source @ GitHub](https://github.com/wgong/chat-records)) : 
-- import chat-records from a saved HTML file;
-- use beautifulsoup to parse the file;
+- import chat-records from a saved HTML file or an exported CSV file;
+- use beautifulsoup to parse the HTML file;
 - store question-and-answers in an SQLite database; 
-- search and manage chat history using data-editor;
+- search and manage chat records;
 
 
 """, unsafe_allow_html=True)
