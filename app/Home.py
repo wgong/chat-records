@@ -25,7 +25,7 @@ st.set_page_config(
 
 
 st.markdown("""
-## 🗩 Chat Records 🗪 
+## 🗩 Chat Records 💬 
 An app to import/export, manage chat records from dialog with AI assistants like [Claude](https://claude.ai/chats), [Bard](https://bard.google.com/).
             
 It is built on [Streamlit](https://streamlit.io/) web framework ([Source @ GitHub](https://github.com/wgong/chat-records)) : 
