@@ -6,13 +6,16 @@ Note:
 """
 
 import streamlit as st
+
 import pandas as pd
 from helper import *
 
-st.subheader("Manage Chats")
+st.subheader("📗 Query Chats")
+
+
 
 def main():
-    search_term = st.text_input("Search keyword:", key="search_view").strip()
+    search_term = st.text_input("🔍Keyword Search:", key="search_view").strip()
     if search_term:
         where_clause = f"""
             (session_title||question||answer||topic||tags) like '%{search_term}%'
@@ -38,7 +41,7 @@ def main():
 
     ts = get_ts_now()
     st.download_button(
-        label="Export DB to CSV",
+        label="📥Export DB to CSV",
         data=convert_df2csv(df, index=False),
         file_name=f"exported-chat-records-{ts}.csv",
         mime='text/csv',

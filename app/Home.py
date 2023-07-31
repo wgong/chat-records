@@ -1,4 +1,15 @@
 """
+# TODO
+[2023-07-29]
+- add support for Bard chat-records
+- deploy to streamlit cloud
+- write a blog to share this app
+
+- use option_menu (horizontally) to display CSV and HTML import (replacing expander)
+
+# DONE
+[2023-07-29]
+- Completed basic functionality for Claude-2 chat-records
 
 """
 
@@ -14,7 +25,7 @@ st.set_page_config(
 
 
 st.markdown("""
-## Chat Records
+## 🗩 Chat Records 🗪 
 An app to import/export, manage chat records from dialog with AI assistants like [Claude](https://claude.ai/chats), [Bard](https://bard.google.com/).
             
 It is built on [Streamlit](https://streamlit.io/) web framework ([Source @ GitHub](https://github.com/wgong/chat-records)) : 

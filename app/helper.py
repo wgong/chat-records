@@ -11,13 +11,14 @@ from st_aggrid import (AgGrid, GridOptionsBuilder, GridUpdateMode,
                        JsCode, DataReturnMode)
 
 CFG = {
-    "DEBUG_FLAG" : True, # False, # 
+    "DEBUG_FLAG" : False, # True, # 
     "CHAT_TABLE" : "t_chats",
     "CHAT_COLUMNS" : ['id', 'session_title', 'bot_name', 'ts', 'seq_num', 'question', 'answer', 'topic', 'tags', 'uid'],
     "DB_FILENAME" : Path(__file__).parent / "chats.sqlite",
     "CHAT_BOTS" : ["Claude - v2", "Bard - beta"],
     "SUPPORTED_CHAT_BOTS" : ["Claude - v2"],
     "NOISE_WORDS" : ['Copy code','Copy'],
+    "MAX_NUM_ROWS" : 100000,  # limit number of rows
 }
 
 #############################
@@ -390,6 +391,15 @@ def db_execute(sql_statement, debug=CFG["DEBUG_FLAG"]):
         debug_print(sql_statement, debug=debug)
         _conn.execute(sql_statement)
         _conn.commit()      
+
+def db_get_row_count(table_name):
+    with DBConn() as _conn:
+        sql_stmt = f"""
+            select count(*)
+            from {table_name};
+        """
+        df = pd.read_sql(sql_stmt, _conn)
+        return df.iat[0,0]
 
 def db_select_by_id(table_name, id_value=""):
     """Select row by primary key: id

@@ -9,7 +9,7 @@ import streamlit as st
 import pandas as pd
 from helper import *
 
-st.subheader("Update Chats")
+st.subheader("📘Update Chats")
 
 def ui_layout_form_fields(data,form_name,old_row,col,
                         widget_types,col_labels,system_columns):
@@ -108,7 +108,7 @@ def ui_layout_form(selected_row, table_name="t_chats"):
             delete_flag = st.checkbox("Delelte Record?", value=False)
             data.update({col: delete_flag})
 
-        save_btn = st.form_submit_button("Save")
+        save_btn = st.form_submit_button("💾 Save")
         if save_btn:
             try:
                 delete_flag = data.get("delelte_record", False)
@@ -131,7 +131,7 @@ def ui_layout_form(selected_row, table_name="t_chats"):
 
 
 def main():
-    search_term = st.text_input("Search keyword:", key="search_update").strip()
+    search_term = st.text_input("🔍Keyword Search:", key="search_update").strip()
     if search_term:
         where_clause = f"""
             (session_title||question||answer||topic||tags) like '%{search_term}%'
