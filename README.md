@@ -38,6 +38,6 @@ This app is built with streamlit web framework:
 
 # Limitation
 
-It currently supports AI assistants like Claude, Bard. 
+On 2023-07-30, Claude.AI also blocked one from saving chats as HTML file locally.
 
 == An session from ChatGPT cannot be saved into a HTML file locally == (If you know how, please share.) 
