@@ -5,12 +5,9 @@ Note:
     - https://discuss.streamlit.io/t/experimental-data-editor-how-to-retrieve-selection/40518
 """
 
-import streamlit as st
-
-import pandas as pd
 from helper import *
 
-st.subheader("📗 Query Chats")
+st.subheader("🗒️ Review-Export Chats")
 
 
 
@@ -28,7 +25,7 @@ def main():
         sql_stmt = f"""
             select 
                 session_title, seq_num, question, answer, topic, tags, bot_name, ts, uid, id
-            from {CFG["CHAT_TABLE"]}
+            from {CFG["TABLE_CHATS"]}
             where {where_clause}
             order by ts desc, session_title, seq_num
         """
@@ -37,7 +34,7 @@ def main():
     if df is None or not df.shape[0]:
         return
 
-    grid_response = display_df_grid(df, selection_mode="multiple")
+    grid_response = ui_display_df_grid(df, selection_mode="multiple")
 
     ts = get_ts_now()
     st.download_button(

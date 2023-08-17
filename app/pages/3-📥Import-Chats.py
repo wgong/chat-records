@@ -2,13 +2,13 @@
 On 2023-07-30, Claude.AI starts blocking Save-HTML page, I can no longer save chat-records.
 """
 
-import streamlit as st
-from streamlit_option_menu import option_menu
-import pandas as pd
+
+
+
 
 from helper import *
 
-st.subheader("📙Import Chats")
+st.subheader("📥Import Chats")
 file_type = option_menu(None, 
     ["HTML", "CSV", ], 
     icons=["filetype-csv","filetype-html"],  # from https://icons.getbootstrap.com/
@@ -24,12 +24,12 @@ file_type = option_menu(None,
 )
 
 def safe_to_sql(df, conn):
-    curr_row_count = db_get_row_count(CFG["CHAT_TABLE"])
+    curr_row_count = db_get_row_count(CFG["TABLE_CHATS"])
     st.info(f"curr_row_count = {curr_row_count}")
     if curr_row_count < CFG["MAX_NUM_ROWS"]:
-        df.to_sql(CFG["CHAT_TABLE"], conn, if_exists='append', index=False)
+        df.to_sql(CFG["TABLE_CHATS"], conn, if_exists='append', index=False)
     else:
-        st.error(f"""Table {CFG["CHAT_TABLE"]} has over {CFG["MAX_NUM_ROWS"]} rows, saving is disabled !""")
+        st.error(f"""Table {CFG["TABLE_CHATS"]} has over {CFG["MAX_NUM_ROWS"]} rows, saving is disabled !""")
 
 
 def import_chat_from_html():
@@ -38,8 +38,10 @@ def import_chat_from_html():
     INPUT_FILENAME = ""
     html_txt = ""
     cells = []
-    CHAT_BOTS = CFG["CHAT_BOTS"]
+    CHAT_BOTS = db_get_llm_models()
     SUPPORTED_CHAT_BOTS = CFG["SUPPORTED_CHAT_BOTS"]
+
+    TABLE_CHATS_COLUMNS = [c.split()[0]  for c in CFG["TABLES"][CFG["TABLE_CHATS"]]]
 
     c0, c1 = st.columns([4,4])
     with c0:
@@ -83,13 +85,29 @@ def import_chat_from_html():
         st.markdown(question, unsafe_allow_html=True)
         st.markdown(f"""##### <span style="color:blue">A [{seq_num}] :</span>""", unsafe_allow_html=True)
         st.markdown(answer, unsafe_allow_html=True)
-        chat_data.append([id, session_title, bot_name, ts, seq_num, question, answer, topic, tags, uid])
+
+        row_dic = {
+            "id": id,
+            "session_title":session_title,
+            "bot_name":bot_name,
+            "ts":ts,
+            "seq_num":seq_num,
+            "question":question,
+            "answer":answer,
+            "topic":topic,
+            "tags":tags,
+            "uid":uid
+        }
+        row_data = []
+        for c in TABLE_CHATS_COLUMNS:
+            row_data.append(row_dic.get(c,""))
+        chat_data.append(row_data)
         seq_num += 1
 
 
     if not chat_data: return
 
-    df_chat = pd.DataFrame(chat_data, columns=CFG["CHAT_COLUMNS"])
+    df_chat = pd.DataFrame(chat_data, columns=TABLE_CHATS_COLUMNS)
     if df_chat is None or not df_chat.shape[0]:
         return
 
@@ -117,7 +135,6 @@ def import_chat_from_html():
 
 
 def import_chat_from_csv():
-    header = ", ".join(CFG["CHAT_COLUMNS"])
     df_imp = None
     csv_data = None
     _, c1 = st.columns([6,3])
@@ -129,7 +146,7 @@ def import_chat_from_csv():
             csv_data = StringIO(csv_file.getvalue().decode("utf-8"))
             df_imp = pd.read_csv(csv_data)
 
-    curr_row_count = db_get_row_count(CFG["CHAT_TABLE"])
+    curr_row_count = db_get_row_count(CFG["TABLE_CHATS"])
     st.info(f"curr_row_count = {curr_row_count}")
 
     if df_imp is not None:

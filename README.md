@@ -2,7 +2,7 @@
 Import and manage chat records with AI assistant like Claude, Bard
 
 
-# Setup
+# Setup & Run
 
 Create a virtual env with the latest streamlit release
 
@@ -11,6 +11,9 @@ Create a virtual env with the latest streamlit release
 $ python -m venv venv_st_latest
 $ venv_st_latest\Scripts\activate.bat     # activate venv on Windows
 $ source venv_st_latest/Scripts/activate  # activate venv on Linux
+## via conda
+$ conda create -n st
+$ conda activate st
 
 ########### clone source and install dependent pkgs
 $ git clone git@github.com:wgong/chat-records.git
@@ -18,7 +21,7 @@ $ cd chat-records
 $ pip install -r requirements.txt
 
 ########### launch app
-$ streamlit run app/Home.py
+$ streamlit run app/Chat-Records.py
 ```
 
 # Functionality
@@ -38,6 +41,7 @@ This app is built with streamlit web framework:
 
 # Limitation
 
-On 2023-07-30, Claude.AI also blocked one from saving chats as HTML file locally.
 
-== An session from ChatGPT cannot be saved into a HTML file locally == (If you know how, please share.) 
+- On 2023-07-30, Claude started preventing one from saving chats as HTML file locally.
+- On 2023-08-16, Claude allows saving chats as HTML file locally again.
+- ChatGPT cannot be saved into a HTML file locally.
