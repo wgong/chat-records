@@ -14,35 +14,31 @@ import sqlite3
 # streamlit libs
 import streamlit as st
 from streamlit_option_menu import option_menu
-from st_aggrid import (AgGrid, GridOptionsBuilder, GridUpdateMode, 
-                       JsCode, DataReturnMode)
+from st_aggrid import (
+    AgGrid, GridOptionsBuilder, GridUpdateMode, JsCode, DataReturnMode
+)
 
 #############################
-# Config params
+# Config params (1st)
 #############################
 CFG = {
     "DEBUG_FLAG" : False, # True, # 
-    "TABLE_CHATS" : "t_chats",
-    "TABLE_MODEL" : "t_llm_model",
-    "DB_FILENAME" : Path(__file__).parent / "chats.sqlite",
-    "CHAT_BOTS" : ["Claude - v2", "Bard - beta"],
+    
     "SUPPORTED_CHAT_BOTS" : ["Claude - v2"],
     "NOISE_WORDS" : ['Copy code','Copy'],
     "MAX_NUM_ROWS" : 100000,  # limit number of rows
+
+    "DB_FILENAME" : Path(__file__).parent / "chats.sqlite",
+    # assign table names
+    "TABLE_CHATS" : "t_chats",
+    "TABLE_MODEL" : "t_llm_model",
+
 }
 
-class DBConn(object):
-    def __init__(self, db_file=CFG["DB_FILENAME"]):
-        self.conn = sqlite3.connect(db_file)
-
-    def __enter__(self):
-        return self.conn
-
-    def __exit__(self, type, value, traceback):
-        self.conn.close()
-
+# use dict update so Table name can be reused
 CFG.update({
-   "TABLES" : 
+    # define table columns in a list (same SQL syntax)
+    "TABLES" : 
         {
             CFG["TABLE_CHATS"] : [
                 'id text NOT NULL',
@@ -70,11 +66,22 @@ CFG.update({
 
 
 #############################
-#  DB related
+#  DB related  (2nd)
 #############################
+class DBConn(object):
+    def __init__(self, db_file=CFG["DB_FILENAME"]):
+        self.conn = sqlite3.connect(db_file)
+
+    def __enter__(self):
+        return self.conn
+
+    def __exit__(self, type, value, traceback):
+        self.conn.close()
 
 
 def db_run_sql(sql_stmt, conn=None):
+    """handles both select and insert/update/delete
+    """
     if not sql_stmt or conn is None:
         return None
     
@@ -84,12 +91,13 @@ def db_run_sql(sql_stmt, conn=None):
     cur = conn.cursor()
     cur.executescript(sql_stmt)
     conn.commit()
-    conn.close()
+    # conn.close()
     return None
 
 
-
 def db_execute(sql_statement, debug=CFG["DEBUG_FLAG"]):
+    """handles insert/update/delete
+    """
     with DBConn() as _conn:
         debug_print(sql_statement, debug=debug)
         _conn.execute(sql_statement)
@@ -294,7 +302,7 @@ def db_get_llm_models():
             order by name
         """
         df = pd.read_sql(sql_stmt, _conn)
-        return df["name"].to_list()
+        return [""] + df["name"].to_list()  # prepend blank
     
 #############################
 #  Misc
@@ -376,9 +384,10 @@ AGGRID_OPTIONS = {
     "enable_pagination": True,
 }
 
-# LOV
+# list of system columns in all tables
 SYS_COLS = ["id","ts","uid"]
 
+# column UI-properties
 PROPS = [
     'is_system_col',
     'is_user_key',
@@ -392,14 +401,13 @@ PROPS = [
     'kwargs'
 ]
 
-
-
-
+# define options for selectbox column type, keyed on column name
+# placed after db_get_llm_models() is defined
 SELECTBOX_OPTIONS = {
-    "bot_name": [""] + db_get_llm_models(),
+    "bot_name": db_get_llm_models(),
 }
 
-# config UI layout
+# config UI layout for form-view
 COLUMN_PROPS = {
 
     CFG["TABLE_CHATS"]: {

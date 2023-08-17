@@ -5,11 +5,9 @@ Note:
     - https://discuss.streamlit.io/t/experimental-data-editor-how-to-retrieve-selection/40518
 """
 
-from helper import *
+from utils import *
 
-st.subheader("🗒️ Review-Export Chats")
-
-
+st.subheader("🗒️ Review & Export Chats")
 
 def main():
     search_term = st.text_input("🔍Keyword Search:", key="search_view").strip()
@@ -31,10 +29,10 @@ def main():
         """
         df = pd.read_sql(sql_stmt, _conn)
 
+    grid_response = ui_display_df_grid(df, selection_mode="multiple")
+
     if df is None or not df.shape[0]:
         return
-
-    grid_response = ui_display_df_grid(df, selection_mode="multiple")
 
     ts = get_ts_now()
     st.download_button(

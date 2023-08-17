@@ -2,13 +2,10 @@
 On 2023-07-30, Claude.AI starts blocking Save-HTML page, I can no longer save chat-records.
 """
 
-
-
-
-
-from helper import *
+from utils import *
 
 st.subheader("📥Import Chats")
+
 file_type = option_menu(None, 
     ["HTML", "CSV", ], 
     icons=["filetype-csv","filetype-html"],  # from https://icons.getbootstrap.com/
@@ -38,7 +35,12 @@ def import_chat_from_html():
     INPUT_FILENAME = ""
     html_txt = ""
     cells = []
-    CHAT_BOTS = db_get_llm_models()
+    bot_names = db_get_llm_models()
+    try:
+        idx_default = bot_names.index("Claude - v2")
+    except:
+        idx_default = 0
+
     SUPPORTED_CHAT_BOTS = CFG["SUPPORTED_CHAT_BOTS"]
 
     TABLE_CHATS_COLUMNS = [c.split()[0]  for c in CFG["TABLES"][CFG["TABLE_CHATS"]]]
@@ -46,7 +48,7 @@ def import_chat_from_html():
     c0, c1 = st.columns([4,4])
     with c0:
         st.markdown("""##### <span style="color:green">Upload an HTML file</span>""", unsafe_allow_html=True)
-        bot_name = st.selectbox("Select AI Assistant Name", CHAT_BOTS, index=CHAT_BOTS.index("Claude - v2"))
+        bot_name = st.selectbox("Select AI Assistant Name", bot_names, index=idx_default)
 
         if bot_name not in SUPPORTED_CHAT_BOTS:
             st.error(f"{bot_name} is unsupported yet")
@@ -59,7 +61,7 @@ def import_chat_from_html():
             # To convert to a string based IO:
             html_txt = StringIO(txt_file.getvalue().decode("utf-8")).read()
 
-        if bot_name == CFG["SUPPORTED_CHAT_BOTS"][0] and html_txt:
+        if bot_name == SUPPORTED_CHAT_BOTS[0] and html_txt:
             cells = parse_html_txt_claude(html_txt)
                 
     if not cells or not INPUT_FILENAME:

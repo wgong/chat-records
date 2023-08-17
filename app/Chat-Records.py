@@ -13,7 +13,7 @@
 
 """
 
-from helper import *
+from utils import *
 
 st.set_page_config(
      page_title='Chat-Records',
@@ -39,8 +39,6 @@ It is built on [Streamlit](https://streamlit.io/) web framework ([Source @ GitHu
 # st.session_state["TABLE_CHATS"] = CFG["TABLE_CHATS"]
 
 # detect table's existence, if no, create it
-
-
 
 with DBConn() as _conn:
     for table_name in CFG["TABLES"].keys():

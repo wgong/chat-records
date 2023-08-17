@@ -5,10 +5,9 @@ Note:
     - https://discuss.streamlit.io/t/experimental-data-editor-how-to-retrieve-selection/40518
 """
 
-from helper import *
+from utils import *
 
 st.subheader("📝 Manage Chats")
-
 
 def main():
     TABLE_NAME = CFG["TABLE_CHATS"]
@@ -30,9 +29,6 @@ def main():
             order by ts desc, session_title, seq_num
         """
         df = pd.read_sql(sql_stmt, _conn)
-
-    # if df is None or not df.shape[0]:
-    #     return
 
     grid_resp = ui_display_df_grid(df, selection_mode="single")
     selected_rows = grid_resp['selected_rows']
